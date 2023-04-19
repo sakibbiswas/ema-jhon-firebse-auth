@@ -1,9 +1,13 @@
-import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Authprovider';
 const Login = () => {
+    const [show, setshow] = useState(false)
     const { signIn } = useContext(AuthContext)
     const Navigate = useNavigate();
+    const location = useLocation()
+    console.log(location);
+    const from = location.state?.from?.pathname || '/'
     const handellogin = event => {
         event.preventDefault();
         const form = event.target;
@@ -18,7 +22,8 @@ const Login = () => {
                 const loogeduser = result.user;
                 console.log(loogeduser);
                 form.reset()
-                Navigate('/')
+                // Navigate('/')
+                Navigate(from, { replace: true })
             })
             .catch(error => {
                 console.log(error);
@@ -45,7 +50,15 @@ const Login = () => {
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input type="password" name='password' placeholder="password" className="input input-bordered" required />
+                            <input type={show ? 'text' : "password"} name='password' placeholder="password" className="input input-bordered" required />
+                            <p onClick={() => setshow(!show)}><small >
+                                {
+                                    show ? <span>Hide password</span> : <span>Show password</span>
+                                }
+                            </small>
+
+
+                            </p>
                             <label className="label">
                                 <p><small>New to ema-jhon?<Link to="/signup">Create new account</Link></small>  </p>
                             </label>
