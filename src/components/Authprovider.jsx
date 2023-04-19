@@ -6,6 +6,7 @@ import app from '../firebase/firebase.config';
 const Authprovider = ({ children }) => {
     const auth = getAuth(app);
     const [user, setuser] = useState(null)
+    const [loading, setloading] = useState(true)
     const createuser = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
     }
@@ -19,12 +20,14 @@ const Authprovider = ({ children }) => {
     useEffect(() => {
         const unsubcribe = onAuthStateChanged(auth, currentuser => {
             setuser(currentuser)
+            setloading(false)
         })
         // stop observing
         return () => unsubcribe()
     }, [])
     const AuthInfo = {
         user,
+        loading,
         createuser,
         signIn,
         logout,
